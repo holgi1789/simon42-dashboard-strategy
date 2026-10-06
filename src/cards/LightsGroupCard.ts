@@ -629,7 +629,8 @@ class Simon42LightsGroupCard extends LitElement {
   }
 
   private _activateScene(sceneId: string): void {
-    this.hass?.callService('scene', 'turn_on', { entity_id: sceneId });
+    // Fire-and-forget, like a tile tap.
+    void this.hass?.callService('scene', 'turn_on', { entity_id: sceneId });
   }
 
   /** Pooled chip row for one light. Rebuilt only when its scene set changed,
@@ -654,7 +655,9 @@ class Simon42LightsGroupCard extends LitElement {
         chip.className = 'chip';
         chip.type = 'button';
         chip.textContent = hass ? sceneLabel(hass, sceneId, entityId) : sceneId;
-        chip.addEventListener('click', () => this._activateScene(sceneId));
+        chip.addEventListener('click', () => {
+          this._activateScene(sceneId);
+        });
         return chip;
       })
     );
